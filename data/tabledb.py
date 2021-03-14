@@ -10,6 +10,7 @@ from utils.mypath import MyPath
 from torchvision import transforms as tf
 from glob import glob
 import pandas as pd
+import cv2
 from detectron2.data import transforms as T_
 
 main_dir = '/scratch/b/bkantarc/jfern090/Projects/Lytica/'
@@ -38,9 +39,11 @@ class TableDB(data.Dataset):
     def __getitem__(self, index):
         row = self.csv_file.iloc[index]
         path, target, class_name = row[1], row[2], row[3]
-        img = Image.open(path)
-        im_size = img.size
+        #Change this later : hacky way by Johan
+        img = cv2.imread(path)
         img = self.resize(img)
+        img = Image.fromarray(img)
+        im_size = img.size
 
         if self.transform is not None:
             img = self.transform(img)
