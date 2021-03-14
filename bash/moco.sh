@@ -10,6 +10,6 @@
 module load anaconda3 cuda cudnn gcc/8.3.0
 source activate detectionEnv
 
-python ../python moco_upd.py --config_env configs/env.yml --config_exp configs/pretext/moco_tabledb.yml
+python ../moco_upd.py --config_env configs/env.yml --config_exp configs/pretext/moco_tabledb.yml
 
 source deactivate
