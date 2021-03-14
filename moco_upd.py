@@ -20,6 +20,7 @@ img_dir = 'Dataset/Images/'
 ref_dir = 'Reference/'
 model_dir = 'Models/'
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Parser
 parser = argparse.ArgumentParser(description='MoCo')
@@ -41,7 +42,7 @@ def main():
     print('Model is {}'.format(model.__class__.__name__))
     print(model)
     # model = torch.nn.DataParallel(model)
-    model = model.cuda()
+    model = model.to(device)
    
     
     # CUDNN
@@ -62,16 +63,16 @@ def main():
     # Memory Bank
     print(colored('Build MemoryBank', 'green'))
     memory_bank_train = MemoryBank(len(train_dataset), 2048, p['num_classes'], p['temperature'])
-    memory_bank_train.cuda()
+    memory_bank_train.to(device)
     memory_bank_val = MemoryBank(len(val_dataset), 2048, p['num_classes'], p['temperature'])
-    memory_bank_val.cuda()
+    memory_bank_val.to(device)
 
     
     # Load the official MoCoV2 checkpoint
     print(colored('Downloading moco v2 checkpoint', 'green'))
     # os.system('wget -L https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar')
     # Uploaded the model to Mist : Johan
-    moco_state = torch.load(main_dir + model_dir + 'moco_v2_800ep_pretrain.pth.tar')
+    moco_state = torch.load(main_dir + model_dir + 'moco_v2_800ep_pretrain.pth.tar', map_location=device)
 
     
     # Transfer moco weights
