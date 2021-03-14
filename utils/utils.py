@@ -62,6 +62,7 @@ def fill_memory_bank(loader, model, memory_bank):
     memory_bank.reset()
 
     for i, batch in enumerate(loader):
+        print(batch)
         images = batch['image'].cuda(non_blocking=True)
         targets = batch['target'].cuda(non_blocking=True)
         output = model(images)
