@@ -36,7 +36,7 @@ def main():
     
     
     # Model
-    print(colored('Retrieve model', 'blue'))
+    print(colored('Retrieve model', 'green'))
     model = get_model(p)
     print('Model is {}'.format(model.__class__.__name__))
     print(model)
@@ -45,12 +45,12 @@ def main():
    
     
     # CUDNN
-    print(colored('Set CuDNN benchmark', 'blue')) 
+    print(colored('Set CuDNN benchmark', 'green'))
     torch.backends.cudnn.benchmark = True
     
     
     # Dataset
-    print(colored('Retrieve dataset', 'blue'))
+    print(colored('Retrieve dataset', 'green'))
     transforms = get_val_transformations(p)
     train_dataset = get_train_dataset(p, transforms) 
     val_dataset = get_val_dataset(p, transforms)
@@ -60,7 +60,7 @@ def main():
     
    
     # Memory Bank
-    print(colored('Build MemoryBank', 'blue'))
+    print(colored('Build MemoryBank', 'green'))
     memory_bank_train = MemoryBank(len(train_dataset), 2048, p['num_classes'], p['temperature'])
     memory_bank_train.cuda()
     memory_bank_val = MemoryBank(len(val_dataset), 2048, p['num_classes'], p['temperature'])
@@ -68,14 +68,14 @@ def main():
 
     
     # Load the official MoCoV2 checkpoint
-    print(colored('Downloading moco v2 checkpoint', 'blue'))
+    print(colored('Downloading moco v2 checkpoint', 'green'))
     # os.system('wget -L https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar')
     # Uploaded the model to Mist : Johan
     moco_state = torch.load(main_dir + model_dir + 'moco_v2_800ep_pretrain.pth.tar', map_location='cpu')
 
     
     # Transfer moco weights
-    print(colored('Transfer MoCo weights to model', 'blue'))
+    print(colored('Transfer MoCo weights to model', 'green'))
     new_state_dict = {}
     state_dict = moco_state['state_dict']
     for k in list(state_dict.keys()):
@@ -97,7 +97,7 @@ def main():
    
  
     # Save final model
-    print(colored('Save pretext model', 'blue'))
+    print(colored('Save pretext model', 'green'))
     torch.save(model.module.state_dict(), p['pretext_model'])
     model.module.contrastive_head = torch.nn.Identity() # In this case, we mine the neighbors before the MLP. 
 
@@ -105,7 +105,7 @@ def main():
     # Mine the topk nearest neighbors (Train)
     # These will be used for training with the SCAN-Loss.
     topk = 50
-    print(colored('Mine the nearest neighbors (Train)(Top-%d)' %(topk), 'blue'))
+    print(colored('Mine the nearest neighbors (Train)(Top-%d)' %(topk), 'green'))
     transforms = get_val_transformations(p)
     train_dataset = get_train_dataset(p, transforms) 
     fill_memory_bank(train_dataloader, model, memory_bank_train)
@@ -117,7 +117,7 @@ def main():
     # Mine the topk nearest neighbors (Validation)
     # These will be used for validation.
     topk = 5
-    print(colored('Mine the nearest neighbors (Val)(Top-%d)' %(topk), 'blue'))
+    print(colored('Mine the nearest neighbors (Val)(Top-%d)' %(topk), 'green'))
     fill_memory_bank(val_dataloader, model, memory_bank_val)
     print('Mine the neighbors')
     indices, acc = memory_bank_val.mine_nearest_neighbors(topk)

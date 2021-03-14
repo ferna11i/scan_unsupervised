@@ -27,7 +27,7 @@ class TableDB(data.Dataset):
         else:
             file_name = main_dir + ref_dir + "ic13_test_unsup.csv"
 
-        self.csv_file = pd.DataFrame(file_name)
+        self.csv_file = pd.read_csv(file_name)
         self.transform = transform 
         self.split = split
         self.resize = T_.ResizeShortestEdge([912, 912], 1600)
