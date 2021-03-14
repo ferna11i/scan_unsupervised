@@ -35,7 +35,7 @@ class ConfidenceBasedCE(nn.Module):
         Loss function during self-labeling
 
         input: logits for original samples and for its strong augmentations 
-        output: cross entropy 
+        bash_output: cross entropy 
         """
         # Retrieve target and mask based on weakly augmentated anchors
         weak_anchors_prob = self.softmax(anchors_weak) 
@@ -69,7 +69,7 @@ def entropy(x, input_as_probabilities):
     Helper function to compute the entropy over the batch 
 
     input: batch w/ shape [b, num_classes]
-    output: entropy value [is ideally -log(num_classes)]
+    bash_output: entropy value [is ideally -log(num_classes)]
     """
 
     if input_as_probabilities:
@@ -99,7 +99,7 @@ class SCANLoss(nn.Module):
             - anchors: logits for anchor images w/ shape [b, num_classes]
             - neighbors: logits for neighbor images w/ shape [b, num_classes]
 
-        output:
+        bash_output:
             - Loss
         """
         # Softmax
@@ -107,7 +107,7 @@ class SCANLoss(nn.Module):
         anchors_prob = self.softmax(anchors)
         positives_prob = self.softmax(neighbors)
        
-        # Similarity in output space
+        # Similarity in bash_output space
         similarity = torch.bmm(anchors_prob.view(b, 1, n), positives_prob.view(b, n, 1)).squeeze()
         ones = torch.ones_like(similarity)
         consistency_loss = self.bce(similarity, ones)
@@ -133,7 +133,7 @@ class SimCLRLoss(nn.Module):
         input:
             - features: hidden feature representation of shape [b, 2, dim]
 
-        output:
+        bash_output:
             - loss: loss computed according to SimCLR 
         """
 

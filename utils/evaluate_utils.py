@@ -56,7 +56,7 @@ def get_predictions(p, dataloader, model, return_features=False):
         images = batch[key_].cuda(non_blocking=True)
         bs = images.shape[0]
         res = model(images, forward_pass='return_all')
-        output = res['output']
+        output = res['bash_output']
         if return_features:
             features[ptr: ptr+bs] = res['features']
             ptr += bs

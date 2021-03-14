@@ -54,7 +54,7 @@ class ClusteringModel(nn.Module):
 
         elif forward_pass == 'return_all':
             features = self.backbone(x)
-            out = {'features': features, 'output': [cluster_head(features) for cluster_head in self.cluster_head]}
+            out = {'features': features, 'bash_output': [cluster_head(features) for cluster_head in self.cluster_head]}
         
         else:
             raise ValueError('Invalid forward pass {}'.format(forward_pass))        

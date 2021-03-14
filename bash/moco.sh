@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --gpus-per-node=1
+#SBATCH --time=1:45:00
+#SBATCH --job-name moco
+#SBATCH --bash_output=../bash_output/moco.txt
+#SBATCH -A soscip-3-040
+#SBATCH --mail-type=FAIL
+
+module load anaconda3 cuda cudnn gcc/8.3.0
+source activate detectionEnv
+
+python ../moco_upd.py
+
+source deactivate
