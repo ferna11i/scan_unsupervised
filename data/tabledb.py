@@ -62,7 +62,7 @@ class TableDB(data.Dataset):
         if self.transform is not None:
             img = self.transform(img)
 
-        out = {'image': img, 'target': target, 'meta': {'im_size': im_size, 'index': index, 'class_name': class_name}}
+        out = {'image': img, 'target': torch.from_numpy(target), 'meta': {'im_size': im_size, 'index': index, 'class_name': class_name}}
 
         return out
 
