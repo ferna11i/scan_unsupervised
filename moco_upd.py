@@ -71,26 +71,35 @@ def main():
     print(colored('Downloading moco v2 checkpoint', 'green'))
     # os.system('wget -L https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar')
     # Uploaded the model to Mist : Johan
-    moco_state = torch.load(main_dir + model_dir + 'moco_v2_800ep_pretrain.pth.tar', map_location='cpu')
+    moco_state = torch.load(main_dir + model_dir + 'moco_v2_800ep_pretrain.pth.tar')
 
     
     # Transfer moco weights
     print(colored('Transfer MoCo weights to model', 'green'))
     new_state_dict = {}
     state_dict = moco_state['state_dict']
-    for k in list(state_dict.keys()):
-        # Copy backbone weights
-        if k.startswith('module.encoder_q') and not k.startswith('module.encoder_q.fc'):
-            new_k = 'module.backbone.' + k[len('module.encoder_q.'):]
-            new_state_dict[new_k] = state_dict[k]
-        
-        # Copy mlp weights
-        elif k.startswith('module.encoder_q.fc'):
-            new_k = 'module.contrastive_head.' + k[len('module.encoder_q.fc.'):] 
-            new_state_dict[new_k] = state_dict[k] 
+    # for k in list(state_dict.keys()):
+    #     # Copy backbone weights
+    #     if k.startswith('module.encoder_q') and not k.startswith('module.encoder_q.fc'):
+    #         new_k = 'module.backbone.' + k[len('module.encoder_q.'):]
+    #         new_state_dict[new_k] = state_dict[k]
+    #
+    #     # Copy mlp weights
+    #     elif k.startswith('module.encoder_q.fc'):
+    #         new_k = 'module.contrastive_head.' + k[len('module.encoder_q.fc.'):]
+    #         new_state_dict[new_k] = state_dict[k]
+    #
+    #     else:
+    #         raise ValueError('Unexpected key {}'.format(k))
 
+    #Changed by Johan
+    for k, v in state_dict.items():
+        if "conv" in k or "bn" in k or "layer" in k:
+            new_k = "module.backbone." + k
+            new_state_dict[new_k] = state_dict[k]
         else:
-            raise ValueError('Unexpected key {}'.format(k)) 
+            new_k = "module.contrastive_head." + k
+            new_state_dict[new_k] = state_dict[k]
 
     model.load_state_dict(new_state_dict)
     # os.system('rm -rf moco_v2_800ep_pretrain.pth.tar')
