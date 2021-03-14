@@ -107,7 +107,7 @@ def main():
  
     # Save final model
     print(colored('Save pretext model', 'green'))
-    torch.save(model.module.state_dict(), p['pretext_model'])
+    torch.save(model.state_dict(), p['pretext_model'])
     model.contrastive_head = torch.nn.Identity() # In this case, we mine the neighbors before the MLP.
 
     
