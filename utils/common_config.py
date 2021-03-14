@@ -60,6 +60,10 @@ def get_model(p, pretrain_path=None):
             from models.resnet import resnet50
             backbone = resnet50()  
 
+        elif 'tabledb' in p['train_db_name']:
+            from models.resnet import resnet50
+            backbone = resnet50()
+
         else:
             raise NotImplementedError 
 
