@@ -40,7 +40,7 @@ def main():
     model = get_model(p)
     print('Model is {}'.format(model.__class__.__name__))
     print(model)
-    model = torch.nn.DataParallel(model)
+    # model = torch.nn.DataParallel(model)
     model = model.cuda()
    
     
