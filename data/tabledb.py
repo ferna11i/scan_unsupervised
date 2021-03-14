@@ -4,7 +4,6 @@ Licensed under the CC BY-NC 4.0 license (https://creativecommons.org/licenses/by
 """
 import os
 import torch
-import torchvision.datasets as datasets
 import torch.utils.data as data
 from PIL import Image
 from utils.mypath import MyPath
@@ -20,7 +19,7 @@ output_dir = 'Output/'
 model_dir = 'Models/'
 
 
-class TableDB(datasets.Dataset):
+class TableDB(data.Dataset):
     def __init__(self, split='train', transform=None):
         file_name = ""
         if split == 'train':
