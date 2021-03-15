@@ -41,7 +41,7 @@ class TableDB(data.Dataset):
         return len(self.file_contents)
 
     def __getitem__(self, index):
-        row = self.file_contents[index]
+        row = self.file_contents["data"][index]
         path, target, class_name = row["filepath"], row["category_id"], row["category_name"]
         img = Image.open(path)
         width, height = img.size
@@ -71,7 +71,7 @@ class TableDB(data.Dataset):
         return out
 
     def get_image(self, index):
-        path = self.file_contents[index]["filepath"]
+        path = self.file_contents["data"][index]["filepath"]
         img = Image.open(path)
         img = self.resize(img) 
         return img
