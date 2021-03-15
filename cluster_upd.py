@@ -101,3 +101,7 @@ def main():
             output = model(images)
             feature = F.normalize(output, dim=1)
             feature_bank.append(feature)
+
+
+if __name__ == '__main__':
+    main()
