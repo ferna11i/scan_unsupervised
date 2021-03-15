@@ -13,6 +13,7 @@ from utils.common_config import get_model, get_train_dataset,\
 from utils.memory import MemoryBank
 from utils.utils import fill_memory_bank
 from termcolor import colored
+from models.torch_compliance import Identity
 
 
 main_dir = '/scratch/b/bkantarc/jfern090/Projects/Lytica/'
@@ -109,8 +110,8 @@ def main():
     # Save final model
     print(colored('Save pretext model', 'green'))
     torch.save(model.state_dict(), p['pretext_model'])
-    #model.contrastive_head = torch.nn.Identity() # In this case, we mine the neighbors before the MLP.
-
+    # model.contrastive_head = torch.nn.Identity() # In this case, we mine the neighbors before the MLP.
+    model.contrastive_head = Identity()
     
     # Mine the topk nearest neighbors (Train)
     # These will be used for training with the SCAN-Loss.

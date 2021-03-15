@@ -18,7 +18,7 @@ def ShearY(img, v):
         v = -v
     return img.transform(img.size, PIL.Image.AFFINE, (1, 0, 0, v, 1, 0))
 
-def Identity(img, v):
+def IdentityAug(img, v):
     return img
 
 def TranslateX(img, v):
@@ -78,7 +78,7 @@ def Sharpness(img, v):
 
 def augment_list():
     l = [
-        (Identity, 0, 1),  
+        (IdentityAug, 0, 1),
         (AutoContrast, 0, 1),
         (Equalize, 0, 1), 
         (Rotate, -30, 30),
