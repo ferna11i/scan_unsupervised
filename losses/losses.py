@@ -153,7 +153,7 @@ class SimCLRLoss(nn.Module):
         logits = dot_product - logits_max.detach()
 
         mask = mask.repeat(1, 2)
-        logits_mask = torch.scatter(torch.ones_like(mask), 1, torch.arange(b).view(-1, 1).to(device), 0)
+        logits_mask = torch.Tensor.scatter_(torch.ones_like(mask), 1, torch.arange(b).view(-1, 1).to(device), 0)
         mask = mask * logits_mask
 
         # Log-softmax
