@@ -113,43 +113,43 @@ def main():
         print('Train ...')
         simclr_train(train_dataloader, model, criterion, optimizer, epoch)
 
-        # Fill memory bank
-        print('Fill memory bank for kNN...')
-        fill_memory_bank(base_dataloader, model, memory_bank_base)
-
-        # Evaluate (To monitor progress - Not for validation)
-        print('Evaluate ...')
-        top1 = contrastive_evaluate(val_dataloader, model, memory_bank_base)
-        print('Result of kNN evaluation is %.2f' %(top1)) 
+        # # Fill memory bank
+        # print('Fill memory bank for kNN...')
+        # fill_memory_bank(base_dataloader, model, memory_bank_base)
+        #
+        # # Evaluate (To monitor progress - Not for validation)
+        # print('Evaluate ...')
+        # top1 = contrastive_evaluate(val_dataloader, model, memory_bank_base)
+        # print('Result of kNN evaluation is %.2f' %(top1))
         
         # Checkpoint
         print('Checkpoint ...')
         torch.save({'optimizer': optimizer.state_dict(), 'model': model.state_dict(), 
                     'epoch': epoch + 1}, p['pretext_checkpoint'])
 
-    # Save final model
-    torch.save(model.state_dict(), p['pretext_model'])
-
-    # Mine the topk nearest neighbors at the very end (Train) 
-    # These will be served as input to the SCAN loss.
-    print(colored('Fill memory bank for mining the nearest neighbors (train) ...', 'green'))
-    fill_memory_bank(base_dataloader, model, memory_bank_base)
-    topk = 20
-    print('Mine the nearest neighbors (Top-%d)' %(topk)) 
-    indices, acc = memory_bank_base.mine_nearest_neighbors(topk)
-    print('Accuracy of top-%d nearest neighbors on train set is %.2f' %(topk, 100*acc))
-    np.save(p['topk_neighbors_train_path'], indices)   
-
-   
-    # Mine the topk nearest neighbors at the very end (Val)
-    # These will be used for validation.
-    print(colored('Fill memory bank for mining the nearest neighbors (val) ...', 'green'))
-    fill_memory_bank(val_dataloader, model, memory_bank_val)
-    topk = 5
-    print('Mine the nearest neighbors (Top-%d)' %(topk)) 
-    indices, acc = memory_bank_val.mine_nearest_neighbors(topk)
-    print('Accuracy of top-%d nearest neighbors on val set is %.2f' %(topk, 100*acc))
-    np.save(p['topk_neighbors_val_path'], indices)   
+    # # Save final model
+    # torch.save(model.state_dict(), p['pretext_model'])
+    #
+    # # Mine the topk nearest neighbors at the very end (Train)
+    # # These will be served as input to the SCAN loss.
+    # print(colored('Fill memory bank for mining the nearest neighbors (train) ...', 'green'))
+    # fill_memory_bank(base_dataloader, model, memory_bank_base)
+    # topk = 20
+    # print('Mine the nearest neighbors (Top-%d)' %(topk))
+    # indices, acc = memory_bank_base.mine_nearest_neighbors(topk)
+    # print('Accuracy of top-%d nearest neighbors on train set is %.2f' %(topk, 100*acc))
+    # np.save(p['topk_neighbors_train_path'], indices)
+    #
+    #
+    # # Mine the topk nearest neighbors at the very end (Val)
+    # # These will be used for validation.
+    # print(colored('Fill memory bank for mining the nearest neighbors (val) ...', 'green'))
+    # fill_memory_bank(val_dataloader, model, memory_bank_val)
+    # topk = 5
+    # print('Mine the nearest neighbors (Top-%d)' %(topk))
+    # indices, acc = memory_bank_val.mine_nearest_neighbors(topk)
+    # print('Accuracy of top-%d nearest neighbors on val set is %.2f' %(topk, 100*acc))
+    # np.save(p['topk_neighbors_val_path'], indices)
 
  
 if __name__ == '__main__':

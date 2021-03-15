@@ -5,7 +5,7 @@ setup: moco # MoCo is used here
 backbone: resnet50
 model_kwargs:
    head: mlp
-   features_dim: 3
+   features_dim: 128
 
 # Dataset
 train_db_name: tabledb
@@ -20,7 +20,7 @@ criterion_kwargs:
 
 
 # Hyperparameters
-epochs: 10
+epochs: 15
 optimizer: sgd
 optimizer_kwargs:
    nesterov: False
