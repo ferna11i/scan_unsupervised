@@ -97,10 +97,10 @@ def main():
     #Changed by Johan
     for k, v in state_dict.items():
         if "conv" in k or "bn" in k or "layer" in k:
-            new_k = "backbone." + k.split("module.encoder_q.")[1]
+            new_k = "module.backbone." + k.split("module.encoder_q.")[1]
             new_state_dict[new_k] = v
         else:
-            new_k = "contrastive_head." + k.split("module.encoder_q.fc.")[1]
+            new_k = "module.contrastive_head." + k.split("module.encoder_q.fc.")[1]
             new_state_dict[new_k] = v
 
     model.load_state_dict(new_state_dict)
