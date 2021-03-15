@@ -9,6 +9,7 @@ from PIL import Image
 from utils.mypath import MyPath
 from torchvision import transforms as tf
 from glob import glob
+import numpy as np
 import pandas as pd
 from detectron2.data import transforms as T_
 
@@ -62,7 +63,7 @@ class TableDB(data.Dataset):
         if self.transform is not None:
             img = self.transform(img)
 
-        out = {'image': img, 'target': torch.from_numpy(target), 'meta': {'im_size': im_size, 'index': index, 'class_name': class_name}}
+        out = {'image': img, 'target': torch.from_numpy(np.asarray(target)), 'meta': {'im_size': im_size, 'index': index, 'class_name': class_name}}
 
         return out
 

@@ -14,7 +14,7 @@ num_classes: 3
 temperature: 0.07
 
 # Batch size and workers
-batch_size: 4
+batch_size: 2
 num_workers: 0
 
 # Transformations
