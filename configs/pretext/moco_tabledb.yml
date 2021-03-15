@@ -20,7 +20,7 @@ criterion_kwargs:
 
 
 # Hyperparameters
-epochs: 15
+epochs: 30
 optimizer: sgd
 optimizer_kwargs:
    nesterov: False
