@@ -240,6 +240,14 @@ def get_train_transformations(p):
             transforms.ToTensor(),
             transforms.Normalize(**p['augmentation_kwargs']['normalize'])
         ])
+
+    elif p['augmentation_strategy'] == 'tabledb':
+        # TableDB augmentation strategy
+        return transforms.Compose([
+            transforms.RandomResizedCrop(**p['augmentation_kwargs']['random_resized_crop']),
+            transforms.ToTensor(),
+            transforms.Normalize(**p['augmentation_kwargs']['normalize'])
+        ])
     
     elif p['augmentation_strategy'] == 'ours':
         # Augmentation strategy from our paper 
