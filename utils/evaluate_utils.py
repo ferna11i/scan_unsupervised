@@ -25,7 +25,6 @@ def contrastive_evaluate(val_loader, model, memory_bank):
         target = batch['target'].to(device, non_blocking=True)
 
         output = model(images)
-        print(output)
         output = memory_bank.weighted_knn(output) 
 
         acc1 = 100*torch.mean(torch.eq(output, target).float())
