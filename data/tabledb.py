@@ -10,8 +10,8 @@ from utils.mypath import MyPath
 from torchvision import transforms as tf
 from glob import glob
 import numpy as np
-import pandas as pd
-from detectron2.data import transforms as T_
+import json
+
 
 main_dir = '/scratch/b/bkantarc/jfern090/Projects/Lytica/'
 img_dir = 'Dataset/Images/'
@@ -24,11 +24,14 @@ class TableDB(data.Dataset):
     def __init__(self, split='train', transform=None):
         file_name = ""
         if split == 'train':
-            file_name = main_dir + ref_dir + "train_set1_unsup.csv"
+            file_name = main_dir + ref_dir + "train_set1_unsup.json"
         else:
-            file_name = main_dir + ref_dir + "ic13_test_unsup.csv"
+            file_name = main_dir + ref_dir + "ic13_test_unsup.json"
 
-        self.csv_file = pd.read_csv(file_name)
+        self.file_contents = []
+        with open(file_name) as f:
+            self.file_contents = json.load(f)
+
         self.transform = transform 
         self.split = split
         self.shortest_size = 912
@@ -38,8 +41,8 @@ class TableDB(data.Dataset):
         return len(self.csv_file)
 
     def __getitem__(self, index):
-        row = self.csv_file.iloc[index]
-        path, target, class_name = row[1], row[2], row[3]
+        row = self.file_contents[index]
+        path, target, class_name = row["filepath"], row["category_id"], row["category_name"]
         img = Image.open(path)
         width, height = img.size
         scale = self.shortest_size * (1.0 / min(width, height))
@@ -68,7 +71,7 @@ class TableDB(data.Dataset):
         return out
 
     def get_image(self, index):
-        path = self.csv_file.iloc[index, 1]
+        path = self.file_contents[index]["filepath"]
         img = Image.open(path)
         img = self.resize(img) 
         return img
