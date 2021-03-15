@@ -42,7 +42,7 @@ def main():
     model = get_model(p)
     print('Model is {}'.format(model.__class__.__name__))
     print(model)
-    model = torch.nn.DataParallel(model)
+    # model = torch.nn.DataParallel(model)
     model = model.to(device)
    
     
@@ -109,22 +109,22 @@ def main():
  
     # Save final model
     print(colored('Save pretext model', 'green'))
-    torch.save(model.module.state_dict(), p['pretext_model'])
+    torch.save(model.state_dict(), p['pretext_model'])
     # model.contrastive_head = torch.nn.Identity() # In this case, we mine the neighbors before the MLP.
-    model.module.contrastive_head = Identity()
-    
+    model.contrastive_head = Identity()
+
     # Mine the topk nearest neighbors (Train)
     # These will be used for training with the SCAN-Loss.
     topk = 50
     print(colored('Mine the nearest neighbors (Train)(Top-%d)' %(topk), 'green'))
     transforms = get_val_transformations(p)
-    train_dataset = get_train_dataset(p, transforms) 
+    train_dataset = get_train_dataset(p, transforms)
     fill_memory_bank(train_dataloader, model, memory_bank_train)
     indices, acc = memory_bank_train.mine_nearest_neighbors(topk)
     print('Accuracy of top-%d nearest neighbors on train set is %.2f' %(topk, 100*acc))
     np.save(p['topk_neighbors_train_path'], indices)
-   
-     
+
+
     # Mine the topk nearest neighbors (Validation)
     # These will be used for validation.
     topk = 5
