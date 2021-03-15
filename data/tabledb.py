@@ -38,7 +38,7 @@ class TableDB(data.Dataset):
         self.largest_size = 1600
 
     def __len__(self):
-        return len(self.csv_file)
+        return len(self.file_contents)
 
     def __getitem__(self, index):
         row = self.file_contents[index]
