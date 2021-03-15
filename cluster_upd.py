@@ -134,8 +134,10 @@ def main():
             feature_bank.append(feature)
 
             if idx % 25 == 0:
-                print("Feature bank buidling : {} / {}".format(idx + 1, len(train_dataset)))
+                print("Feature bank buidling : {} / {}".format(idx, len(train_dataset)/p["batch_size"]))
 
+        # [D, N]
+        feature_bank = torch.cat(feature_bank, dim=0).t().contiguous()
         print(colored("Feature bank created. Similarity index starts now", "green"))
 
         for batch in train_dataloader:
