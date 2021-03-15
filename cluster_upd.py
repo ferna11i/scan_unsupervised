@@ -124,8 +124,8 @@ def main():
         model.eval()
         total_top1, total_top5, total_num, feature_bank = 0.0, 0.0, 0, []
 
-        progress_bar = tqdm(train_dataloader)
-        for batch in progress_bar:
+        # progress_bar = tqdm(train_dataloader)
+        for idx, batch in enumerate(train_dataloader):
             images = batch['image'].to(device, non_blocking=True)
             # target = batch['target'].to(device, non_blocking=True)
 
@@ -133,8 +133,12 @@ def main():
             feature = F.normalize(output, dim=1)
             feature_bank.append(feature)
 
+            if idx % 25 == 0:
+                print("Feature bank buidling : {} / {}".format(idx + 1, len(train_dataset)))
 
-        for batch in progress_bar:
+        print(colored("Feature bank created. Similarity index starts now", "green"))
+
+        for batch in train_dataloader:
 
             images = batch['image'].to(device, non_blocking=True)
             # target = batch['target'].to(device, non_blocking=True)
