@@ -7,7 +7,7 @@ import torch
 import numpy as np
 import errno
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu", non_blocking=True)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def mkdir_if_missing(directory):
     if not os.path.exists(directory):
@@ -65,9 +65,9 @@ def fill_memory_bank(loader, model, memory_bank):
 
     for i, batch in enumerate(loader):
         # images = batch['image'].cuda(non_blocking=True)
-        images = batch['image'].to(device)
+        images = batch['image'].to(device, non_blocking=True)
         # targets = batch['target'].cuda(non_blocking=True)
-        targets = batch['target'].to(device)
+        targets = batch['target'].to(device, non_blocking=True)
         output = model(images)
         memory_bank.update(output, targets)
         if i % 100 == 0:
