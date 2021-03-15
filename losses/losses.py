@@ -7,6 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 EPS=1e-8
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class MaskedCrossEntropyLoss(nn.Module):
     def __init__(self):
@@ -152,7 +153,7 @@ class SimCLRLoss(nn.Module):
         logits = dot_product - logits_max.detach()
 
         mask = mask.repeat(1, 2)
-        logits_mask = torch.scatter(torch.ones_like(mask), 1, torch.arange(b).view(-1, 1).cuda(), 0)
+        logits_mask = torch.scatter(torch.ones_like(mask), 1, torch.arange(b).view(-1, 1).to(device), 0)
         mask = mask * logits_mask
 
         # Log-softmax
