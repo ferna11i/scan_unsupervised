@@ -109,9 +109,9 @@ def main():
  
     # Save final model
     print(colored('Save pretext model', 'green'))
-    torch.save(model.state_dict(), p['pretext_model'])
+    torch.save(model.module.state_dict(), p['pretext_model'])
     # model.contrastive_head = torch.nn.Identity() # In this case, we mine the neighbors before the MLP.
-    model.contrastive_head = Identity()
+    model.module.contrastive_head = Identity()
     
     # Mine the topk nearest neighbors (Train)
     # These will be used for training with the SCAN-Loss.
