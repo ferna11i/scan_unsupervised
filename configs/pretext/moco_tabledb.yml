@@ -37,7 +37,7 @@ num_workers: 0
 augmentation_strategy: tabledb
 augmentation_kwargs:
    random_resized_crop:
-      size: 456
+      size: 224
       scale: [0.2, 1.0]
    color_jitter_random_apply:
       p: 0.8
