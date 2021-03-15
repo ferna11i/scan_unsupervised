@@ -13,7 +13,17 @@ val_db_name: tabledb
 num_classes: 3
 temperature: 0.07
 
-# Batch size and workers
+# Hyperparameters
+epochs: 10
+optimizer: sgd
+optimizer_kwargs:
+   nesterov: False
+   weight_decay: 0.0001
+   momentum: 0.9
+   lr: 0.4
+scheduler: cosine
+scheduler_kwargs:
+   lr_decay_rate: 0.1
 batch_size: 6
 num_workers: 0
 
