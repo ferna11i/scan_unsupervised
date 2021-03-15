@@ -28,6 +28,7 @@ batch_size: 6
 num_workers: 0
 
 # Transformations
+augmentation_strategy: standard
 transformation_kwargs:
    crop_size: 224
    normalize:
