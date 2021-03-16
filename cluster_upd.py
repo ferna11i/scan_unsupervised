@@ -7,7 +7,7 @@ import os
 import torch
 import torch.nn.functional as F
 import numpy as np
-from tqdm import tqdm
+# from tqdm import tqdm
 
 from utils.config import create_config
 from utils.common_config import get_criterion, get_model, get_train_dataset, \
