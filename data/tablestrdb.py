@@ -24,9 +24,9 @@ class TableStrDB(data.Dataset):
     def __init__(self, split='train', transform=None):
         file_name = ""
         if split == 'train':
-            file_name = main_dir + ref_dir + "train_set1_unsup.json"
+            file_name = main_dir + ref_dir + "train_set1_str_unsup.json"
         else:
-            file_name = main_dir + ref_dir + "ic13_test_unsup.json"
+            file_name = main_dir + ref_dir + "ic13_test_str_unsup.json"
 
         self.file_contents = []
         with open(file_name) as f:
@@ -34,8 +34,8 @@ class TableStrDB(data.Dataset):
 
         self.transform = transform 
         self.split = split
-        self.shortest_size = 912
-        self.largest_size = 1600
+        self.shortest_size = 800
+        self.largest_size = 1333
 
     def __len__(self):
         return len(self.file_contents["data"])
