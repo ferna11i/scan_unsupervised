@@ -86,6 +86,7 @@ def get_model(p, pretrain_path=None):
 
     # Load pretrained weights
     if pretrain_path is not None and os.path.exists(pretrain_path):
+        print(pretrain_path)
         state = torch.load(pretrain_path, map_location='cpu')
         
         if p['setup'] == 'scan': # Weights are supposed to be transfered from contrastive training
