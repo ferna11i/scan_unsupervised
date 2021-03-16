@@ -10,7 +10,7 @@ model_kwargs:
 # Dataset
 train_db_name: tabledb
 val_db_name: tabledb
-num_classes: 3
+num_classes: 1
 temperature: 0.07
 
 # Loss
