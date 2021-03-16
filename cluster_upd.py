@@ -139,6 +139,7 @@ def main():
         # [D, N]
         feature_bank = torch.cat(feature_bank, dim=0).t().contiguous()
         print(colored("Feature bank created. Similarity index starts now", "green"))
+        print(feature_bank.size())
 
         for batch in train_dataloader:
 
