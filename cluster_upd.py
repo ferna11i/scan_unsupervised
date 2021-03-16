@@ -171,15 +171,15 @@ def main():
     #             break
 
 
-    # Mine the topk nearest neighbors at the very end (Train)
-    # These will be served as input to the SCAN loss.
-    print(colored('Fill memory bank for mining the nearest neighbors (train) ...', 'green'))
-    fill_memory_bank(base_dataloader, model, memory_bank_base)
-    topk = 20
-    print('Mine the nearest neighbors (Top-%d)' %(topk))
-    indices, acc = memory_bank_base.mine_nearest_neighbors(topk)
-    print('Accuracy of top-%d nearest neighbors on train set is %.2f' %(topk, 100*acc))
-    np.save(p['topk_neighbors_train_path'], indices)
+    # # Mine the topk nearest neighbors at the very end (Train)
+    # # These will be served as input to the SCAN loss.
+    # print(colored('Fill memory bank for mining the nearest neighbors (train) ...', 'green'))
+    # fill_memory_bank(base_dataloader, model, memory_bank_base)
+    # topk = 20
+    # print('Mine the nearest neighbors (Top-%d)' %(topk))
+    # indices, acc = memory_bank_base.mine_nearest_neighbors(topk)
+    # print('Accuracy of top-%d nearest neighbors on train set is %.2f' %(topk, 100*acc))
+    # np.save(p['topk_neighbors_train_path'], indices)
 
 
     # Mine the topk nearest neighbors at the very end (Val)

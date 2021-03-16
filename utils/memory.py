@@ -52,6 +52,8 @@ class MemoryBank(object):
         index = faiss.index_cpu_to_all_gpus(index)
         index.add(features)
         distances, indices = index.search(features, topk+1) # Sample itself is included
+        print(indices)
+        print(distances)
         
         # evaluate 
         if calculate_accuracy:

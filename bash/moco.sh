@@ -10,6 +10,6 @@
 module load anaconda3
 source activate clusterEnv
 
-python ../scan_upd.py --config_env ../configs/env.yml --config_exp ../configs/scan/moco_tabledb.yml
+python ../cluster_upd.py --config_env ../configs/env.yml --config_exp ../configs/pretext/moco_tabledb.yml
 
 source deactivate
