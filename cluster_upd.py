@@ -99,7 +99,7 @@ def main():
                                       split='train')  # Split is for stl-10
     val_dataset = get_val_dataset(p, val_transforms)
     train_dataloader = get_val_dataloader(p, train_dataset)
-    # val_dataloader = get_val_dataloader(p, val_dataset)
+    val_dataloader = get_val_dataloader(p, val_dataset)
     print('Dataset contains {}/{} train/val samples'.format(len(train_dataset), len(val_dataset)))
 
 
@@ -112,6 +112,10 @@ def main():
                                 p['model_kwargs']['features_dim'],
                                 p['num_classes'], p['criterion_kwargs']['temperature'])
     memory_bank_base.to(device)
+    memory_bank_val = MemoryBank(len(val_dataset),
+                                p['model_kwargs']['features_dim'],
+                                p['num_classes'], p['criterion_kwargs']['temperature'])
+    memory_bank_val.to(device)
 
 
     # Checkpoint
@@ -176,6 +180,17 @@ def main():
     indices, acc = memory_bank_base.mine_nearest_neighbors(topk)
     print('Accuracy of top-%d nearest neighbors on train set is %.2f' %(topk, 100*acc))
     np.save(p['topk_neighbors_train_path'], indices)
+
+
+    # Mine the topk nearest neighbors at the very end (Val)
+    # These will be used for validation.
+    print(colored('Fill memory bank for mining the nearest neighbors (val) ...', 'green'))
+    fill_memory_bank(val_dataloader, model, memory_bank_val)
+    topk = 5
+    print('Mine the nearest neighbors (Top-%d)' %(topk))
+    indices, acc = memory_bank_val.mine_nearest_neighbors(topk)
+    print('Accuracy of top-%d nearest neighbors on val set is %.2f' %(topk, 100*acc))
+    np.save(p['topk_neighbors_val_path'], indices)
 
 if __name__ == '__main__':
     main()
