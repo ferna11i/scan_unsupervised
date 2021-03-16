@@ -104,6 +104,16 @@ def main():
 
 
 
+    # Memory Bank
+    print(colored('Build MemoryBank', 'green'))
+    base_dataset = get_train_dataset(p, val_transforms, split='train') # Dataset w/o augs for knn eval
+    base_dataloader = get_val_dataloader(p, base_dataset)
+    memory_bank_base = MemoryBank(len(base_dataset),
+                                p['model_kwargs']['features_dim'],
+                                p['num_classes'], p['criterion_kwargs']['temperature'])
+    memory_bank_base.to(device)
+
+
     # Checkpoint
     if os.path.exists(p['pretext_checkpoint']):
         print(colored('Restart from checkpoint {}'.format(p['pretext_checkpoint']), 'green'))
@@ -118,43 +128,54 @@ def main():
         start_epoch = 0
         model = model.to(device)
 
-    # Training
-    print(colored('Starting main loop', 'green'))
-    with torch.no_grad():
-        model.eval()
-        total_top1, total_top5, total_num, feature_bank = 0.0, 0.0, 0, []
+    # # Training
+    # print(colored('Starting main loop', 'green'))
+    # with torch.no_grad():
+    #     model.eval()
+    #     total_top1, total_top5, total_num, feature_bank = 0.0, 0.0, 0, []
+    #
+    #     # progress_bar = tqdm(train_dataloader)
+    #     for idx, batch in enumerate(train_dataloader):
+    #         images = batch['image'].to(device, non_blocking=True)
+    #         # target = batch['target'].to(device, non_blocking=True)
+    #
+    #         output = model(images)
+    #         feature = F.normalize(output, dim=1)
+    #         feature_bank.append(feature)
+    #
+    #         if idx % 25 == 0:
+    #             print("Feature bank buidling : {} / {}".format(idx, len(train_dataset)/p["batch_size"]))
+    #
+    #     # [D, N]
+    #     feature_bank = torch.cat(feature_bank, dim=0).t().contiguous()
+    #     print(colored("Feature bank created. Similarity index starts now", "green"))
+    #     print(feature_bank.size())
+    #
+    #     for idx, batch in enumerate(train_dataloader):
+    #
+    #         images = batch['image'].to(device, non_blocking=True)
+    #         # target = batch['target'].to(device, non_blocking=True)
+    #
+    #         output = model(images)
+    #         feature = F.normalize(output, dim=1)
+    #
+    #         sim_indices = knn_predict(feature, feature_bank, "", "", 10, 0.1)
+    #
+    #         print(sim_indices)
+    #
+    #         if idx == 10:
+    #             break
 
-        # progress_bar = tqdm(train_dataloader)
-        for idx, batch in enumerate(train_dataloader):
-            images = batch['image'].to(device, non_blocking=True)
-            # target = batch['target'].to(device, non_blocking=True)
 
-            output = model(images)
-            feature = F.normalize(output, dim=1)
-            feature_bank.append(feature)
+    # Mine the topk nearest neighbors at the very end (Train)
+    # These will be served as input to the SCAN loss.
+    print(colored('Fill memory bank for mining the nearest neighbors (train) ...', 'green'))
+    fill_memory_bank(base_dataloader, model, memory_bank_base)
+    topk = 20
+    print('Mine the nearest neighbors (Top-%d)' %(topk))
+    indices, acc = memory_bank_base.mine_nearest_neighbors(topk)
+    print('Accuracy of top-%d nearest neighbors on train set is %.2f' %(topk, 100*acc))
+    np.save(p['topk_neighbors_train_path'], indices)
 
-            if idx % 25 == 0:
-                print("Feature bank buidling : {} / {}".format(idx, len(train_dataset)/p["batch_size"]))
-
-        # [D, N]
-        feature_bank = torch.cat(feature_bank, dim=0).t().contiguous()
-        print(colored("Feature bank created. Similarity index starts now", "green"))
-        print(feature_bank.size())
-
-        for idx, batch in enumerate(train_dataloader):
-
-            images = batch['image'].to(device, non_blocking=True)
-            # target = batch['target'].to(device, non_blocking=True)
-
-            output = model(images)
-            feature = F.normalize(output, dim=1)
-
-            sim_indices = knn_predict(feature, feature_bank, "", "", 10, 0.1)
-
-            print(sim_indices)
-
-            if idx == 10:
-                break
-                
 if __name__ == '__main__':
     main()
