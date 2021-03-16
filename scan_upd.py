@@ -120,9 +120,9 @@ def main():
             print('No new lowest loss on validation set: %.4f -> %.4f' %(best_loss, lowest_loss))
             print('Lowest loss head is %d' %(best_loss_head))
 
-        print('Evaluate with hungarian matching algorithm ...')
-        clustering_stats = hungarian_evaluate(lowest_loss_head, predictions, compute_confusion_matrix=False)
-        print(clustering_stats)     
+        # print('Evaluate with hungarian matching algorithm ...')
+        # clustering_stats = hungarian_evaluate(lowest_loss_head, predictions, compute_confusion_matrix=False)
+        # print(clustering_stats)
 
         # Checkpoint
         print('Checkpoint ...')
@@ -135,12 +135,13 @@ def main():
     model_checkpoint = torch.load(p['scan_model'], map_location='cpu')
     model.load_state_dict(model_checkpoint['model'])
     predictions = get_predictions(p, val_dataloader, model)
-    # clustering_stats = hungarian_evaluate(model_checkpoint['head'], predictions,
-    #                         class_names=val_dataset.dataset.classes,
-    #                         compute_confusion_matrix=True,
-    #                         confusion_matrix_file=os.path.join(p['scan_dir'], 'confusion_matrix.png'))
-    clustering_stats = hungarian_evaluate(lowest_loss_head, predictions, compute_confusion_matrix=False)
-    print(clustering_stats)         
-    
+    # # clustering_stats = hungarian_evaluate(model_checkpoint['head'], predictions,
+    # #                         class_names=val_dataset.dataset.classes,
+    # #                         compute_confusion_matrix=True,
+    # #                         confusion_matrix_file=os.path.join(p['scan_dir'], 'confusion_matrix.png'))
+    # clustering_stats = hungarian_evaluate(lowest_loss_head, predictions, compute_confusion_matrix=False)
+    # print(clustering_stats)
+    print(predictions)
+
 if __name__ == "__main__":
     main()
