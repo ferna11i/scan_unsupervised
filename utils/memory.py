@@ -53,7 +53,7 @@ class MemoryBank(object):
         index.add(features)
         distances, indices = index.search(features, topk+1) # Sample itself is included
 
-        np.save("/scratch/b/bkantarc/jfern090/Projects/Lytica/results/tabledb/pretext/features.npy", indices)
+        np.save("/scratch/b/bkantarc/jfern090/Projects/Lytica/results/tabledb/pretext/features.npy", features)
 
         # evaluate 
         if calculate_accuracy:
