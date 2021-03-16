@@ -48,7 +48,7 @@ def main():
     
     # Model
     print(colored('Get model', 'green'))
-    model = get_model(p, p['pretext_model'])
+    model = get_model(p, p['pretext_checkpoint'])
     print(model)
     # model = torch.nn.DataParallel(model)
     model = model.to(device)
