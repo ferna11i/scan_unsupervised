@@ -16,6 +16,11 @@ from utils.common_config import get_train_transformations, get_val_transformatio
 from utils.evaluate_utils import get_predictions, scan_evaluate, hungarian_evaluate
 from utils.train_utils import scan_train
 
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+
 FLAGS = argparse.ArgumentParser(description='SCAN Loss')
 FLAGS.add_argument('--config_env', help='Location of path config file')
 FLAGS.add_argument('--config_exp', help='Location of experiments config file')
@@ -42,14 +47,14 @@ def main():
     print('Train samples %d - Val samples %d' %(len(train_dataset), len(val_dataset)))
     
     # Model
-    print(colored('Get model', 'blue'))
+    print(colored('Get model', 'green'))
     model = get_model(p, p['pretext_model'])
     print(model)
-    model = torch.nn.DataParallel(model)
-    model = model.cuda()
+    # model = torch.nn.DataParallel(model)
+    model = model.to(device)
 
     # Optimizer
-    print(colored('Get optimizer', 'blue'))
+    print(colored('Get optimizer', 'green'))
     optimizer = get_optimizer(p, model, p['update_cluster_head_only'])
     print(optimizer)
     
@@ -58,9 +63,9 @@ def main():
         print(colored('WARNING: SCAN will only update the cluster head', 'red'))
 
     # Loss function
-    print(colored('Get loss', 'blue'))
+    print(colored('Get loss', 'green'))
     criterion = get_criterion(p) 
-    criterion.cuda()
+    criterion.to(device)
     print(criterion)
 
     # Checkpoint
@@ -130,10 +135,11 @@ def main():
     model_checkpoint = torch.load(p['scan_model'], map_location='cpu')
     model.module.load_state_dict(model_checkpoint['model'])
     predictions = get_predictions(p, val_dataloader, model)
-    clustering_stats = hungarian_evaluate(model_checkpoint['head'], predictions, 
-                            class_names=val_dataset.dataset.classes, 
-                            compute_confusion_matrix=True, 
-                            confusion_matrix_file=os.path.join(p['scan_dir'], 'confusion_matrix.png'))
+    # clustering_stats = hungarian_evaluate(model_checkpoint['head'], predictions,
+    #                         class_names=val_dataset.dataset.classes,
+    #                         compute_confusion_matrix=True,
+    #                         confusion_matrix_file=os.path.join(p['scan_dir'], 'confusion_matrix.png'))
+    clustering_stats = hungarian_evaluate(lowest_loss_head, predictions, compute_confusion_matrix=False)
     print(clustering_stats)         
     
 if __name__ == "__main__":
