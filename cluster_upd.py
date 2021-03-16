@@ -141,7 +141,7 @@ def main():
         print(colored("Feature bank created. Similarity index starts now", "green"))
         print(feature_bank.size())
 
-        for batch in train_dataloader:
+        for idx, batch in enumerate(train_dataloader):
 
             images = batch['image'].to(device, non_blocking=True)
             # target = batch['target'].to(device, non_blocking=True)
@@ -153,5 +153,8 @@ def main():
 
             print(sim_indices)
 
+            if idx == 10:
+                break
+                
 if __name__ == '__main__':
     main()
