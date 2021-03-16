@@ -52,13 +52,13 @@ class MemoryBank(object):
         index = faiss.index_cpu_to_all_gpus(index)
         index.add(features)
         distances, indices = index.search(features, topk+1) # Sample itself is included
-        
+
+        np.save("/scratch/b/bkantarc/jfern090/Projects/Lytica/results/tabledb/pretext/features.npy", indices)
+
         # evaluate 
         if calculate_accuracy:
             targets = self.targets.cpu().numpy()
-            print(targets)
             neighbor_targets = np.take(targets, indices[:,1:], axis=0) # Exclude sample itself for eval
-            print(neighbor_targets)
             anchor_targets = np.repeat(targets.reshape(-1,1), topk, axis=1)
             accuracy = np.mean(neighbor_targets == anchor_targets)
             return indices, accuracy
