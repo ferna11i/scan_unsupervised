@@ -86,11 +86,11 @@ def get_model(p, pretrain_path=None):
 
     # Load pretrained weights
     if pretrain_path is not None and os.path.exists(pretrain_path):
-        print(pretrain_path)
         state = torch.load(pretrain_path, map_location='cpu')
         
         if p['setup'] == 'scan': # Weights are supposed to be transfered from contrastive training
             missing = model.load_state_dict(state, strict=False)
+            print(missing)
             assert(set(missing[1]) == {
                 'contrastive_head.0.weight', 'contrastive_head.0.bias', 
                 'contrastive_head.2.weight', 'contrastive_head.2.bias'}
